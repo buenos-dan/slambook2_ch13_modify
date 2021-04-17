@@ -37,7 +37,6 @@ void Frame::SetKeyFrame() {
     keyframe_id_ = keyframe_factory_id++;
 }
 
-<<<<<<< HEAD
 int Frame::ExtractAndMatch(OrbExtractor *orbExtractor, OrbMatcher *orbMatcher) {
     vector<cv::KeyPoint> kps_left, kps_right;
     cv::Mat descs_left_raw, descs_right_raw;
@@ -68,10 +67,4 @@ cv::Mat Frame::GetDescriptors() {
 
 
 
-=======
-cv::Mat Frame::GetDescriptor(){
-    return cv::Mat();
-}
-
->>>>>>> 28b85c9f17102163aca4bec8529239bdf049f6c0
 }
