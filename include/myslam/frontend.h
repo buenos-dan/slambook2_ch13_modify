@@ -7,6 +7,7 @@
 #include "myslam/common_include.h"
 #include "myslam/frame.h"
 #include "myslam/map.h"
+#include "myslam/OrbMatcher.h"
 
 namespace myslam {
 
@@ -85,13 +86,13 @@ class Frontend {
      * keypoints will be saved in current_frame_
      * @return
      */
-    int DetectFeatures();
+    // int DetectFeatures();
 
     /**
      * Find the corresponding features in right image of current_frame_
      * @return num of features found
      */
-    int FindFeaturesInRight();
+    // int FindFeaturesInRight();
 
     /**
      * Build the initial map with single image
@@ -127,14 +128,16 @@ class Frontend {
     int tracking_inliers_ = 0;  // inliers, used for testing new keyframes
 
     // params
-    int num_features_ = 200;
+    // int num_features_ = 200;
     int num_features_init_ = 100;
     int num_features_tracking_ = 50;
     int num_features_tracking_bad_ = 20;
     int num_features_needed_for_keyframe_ = 80;
 
     // utilities
-    cv::Ptr<cv::GFTTDetector> gftt_;  // feature detector in opencv
+    OrbExtractor *orbExtractor_;
+    OrbMatcher *orbMatcher_;
+    
 };
 
 }  // namespace myslam

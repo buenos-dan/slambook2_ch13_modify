@@ -16,10 +16,10 @@
 namespace myslam {
 
 Frontend::Frontend() {
-    gftt_ =
-        cv::GFTTDetector::create(Config::Get<int>("num_features"), 0.01, 20);
+    orbExtractor_ = new OrbExtractor(8, 1.2, 20, 500);
+    orbMatcher_ = new OrbMatcher();
+
     num_features_init_ = Config::Get<int>("num_features_init");
-    num_features_ = Config::Get<int>("num_features");
 }
 
 bool Frontend::AddFrame(myslam::Frame::Ptr frame) {
@@ -46,6 +46,8 @@ bool Frontend::Track() {
     if (last_frame_) {
         current_frame_->SetPose(relative_motion_ * last_frame_->Pose());
     }
+
+    current_frame_->ExtractAndMatch(orbExtractor_, orbMatcher_);
 
     int num_track_last = TrackLastFrame();
     tracking_inliers_ = EstimateCurrentPose();
@@ -81,10 +83,8 @@ bool Frontend::InsertKeyframe() {
               << current_frame_->keyframe_id_;
 
     SetObservationsForKeyFrame();
-    DetectFeatures();  // detect new features
+    current_frame_->ExtractAndMatch(orbExtractor_, orbMatcher_);
 
-    // track in right image
-    FindFeaturesInRight();
     // triangulate map points
     TriangulateNewPoints();
     // update backend because we have a new keyframe
@@ -228,50 +228,23 @@ int Frontend::EstimateCurrentPose() {
 }
 
 int Frontend::TrackLastFrame() {
-    // use LK flow to estimate points in the right image
-    std::vector<cv::Point2f> kps_last, kps_current;
-    for (auto &kp : last_frame_->features_left_) {
-        if (kp->map_point_.lock()) {
-            // use project point
-            auto mp = kp->map_point_.lock();
-            auto px =
-                camera_left_->world2pixel(mp->pos_, current_frame_->Pose());
-            kps_last.push_back(kp->position_.pt);
-            kps_current.push_back(cv::Point2f(px[0], px[1]));
-        } else {
-            kps_last.push_back(kp->position_.pt);
-            kps_current.push_back(kp->position_.pt);
-        }
+    cv::Mat last_frame_descs = last_frame_->GetDescriptors();
+    cv::Mat current_frame_descs = current_frame_->GetDescriptors();
+    vector<cv::DMatch> matches;
+    orbMatcher_->match(current_frame_descs, last_frame_descs, matches);
+
+    for(size_t i = 0; i < matches.size(); i++) {
+        current_frame_->features_left_[matches[i].queryIdx]->map_point_ = 
+            last_frame_->features_left_[matches[i].trainIdx]->map_point_;
     }
 
-    std::vector<uchar> status;
-    Mat error;
-    cv::calcOpticalFlowPyrLK(
-        last_frame_->left_img_, current_frame_->left_img_, kps_last,
-        kps_current, status, error, cv::Size(11, 11), 3,
-        cv::TermCriteria(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 30,
-                         0.01),
-        cv::OPTFLOW_USE_INITIAL_FLOW);
-
-    int num_good_pts = 0;
-
-    for (size_t i = 0; i < status.size(); ++i) {
-        if (status[i]) {
-            cv::KeyPoint kp(kps_current[i], 7);
-            Feature::Ptr feature(new Feature(current_frame_, kp));
-            feature->map_point_ = last_frame_->features_left_[i]->map_point_;
-            current_frame_->features_left_.push_back(feature);
-            num_good_pts++;
-        }
-    }
-
-    LOG(INFO) << "Find " << num_good_pts << " in the last image.";
-    return num_good_pts;
+    LOG(INFO) << "Find " << matches.size() << " in the last image.";
+    
+    return matches.size();
 }
 
 bool Frontend::StereoInit() {
-    int num_features_left = DetectFeatures();
-    int num_coor_features = FindFeaturesInRight();
+    int num_coor_features = current_frame_->ExtractAndMatch(orbExtractor_, orbMatcher_);
     if (num_coor_features < num_features_init_) {
         return false;
     }
@@ -286,68 +259,6 @@ bool Frontend::StereoInit() {
         return true;
     }
     return false;
-}
-
-int Frontend::DetectFeatures() {
-    cv::Mat mask(current_frame_->left_img_.size(), CV_8UC1, 255);
-    for (auto &feat : current_frame_->features_left_) {
-        cv::rectangle(mask, feat->position_.pt - cv::Point2f(10, 10),
-                      feat->position_.pt + cv::Point2f(10, 10), 0, CV_FILLED);
-    }
-
-    std::vector<cv::KeyPoint> keypoints;
-    gftt_->detect(current_frame_->left_img_, keypoints, mask);
-    int cnt_detected = 0;
-    for (auto &kp : keypoints) {
-        current_frame_->features_left_.push_back(
-            Feature::Ptr(new Feature(current_frame_, kp)));
-        cnt_detected++;
-    }
-
-    LOG(INFO) << "Detect " << cnt_detected << " new features";
-    return cnt_detected;
-}
-
-int Frontend::FindFeaturesInRight() {
-    // use LK flow to estimate points in the right image
-    std::vector<cv::Point2f> kps_left, kps_right;
-    for (auto &kp : current_frame_->features_left_) {
-        kps_left.push_back(kp->position_.pt);
-        auto mp = kp->map_point_.lock();
-        if (mp) {
-            // use projected points as initial guess
-            auto px =
-                camera_right_->world2pixel(mp->pos_, current_frame_->Pose());
-            kps_right.push_back(cv::Point2f(px[0], px[1]));
-        } else {
-            // use same pixel in left iamge
-            kps_right.push_back(kp->position_.pt);
-        }
-    }
-
-    std::vector<uchar> status;
-    Mat error;
-    cv::calcOpticalFlowPyrLK(
-        current_frame_->left_img_, current_frame_->right_img_, kps_left,
-        kps_right, status, error, cv::Size(11, 11), 3,
-        cv::TermCriteria(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 30,
-                         0.01),
-        cv::OPTFLOW_USE_INITIAL_FLOW);
-
-    int num_good_pts = 0;
-    for (size_t i = 0; i < status.size(); ++i) {
-        if (status[i]) {
-            cv::KeyPoint kp(kps_right[i], 7);
-            Feature::Ptr feat(new Feature(current_frame_, kp));
-            feat->is_on_left_image_ = false;
-            current_frame_->features_right_.push_back(feat);
-            num_good_pts++;
-        } else {
-            current_frame_->features_right_.push_back(nullptr);
-        }
-    }
-    LOG(INFO) << "Find " << num_good_pts << " in the right image.";
-    return num_good_pts;
 }
 
 bool Frontend::BuildInitMap() {

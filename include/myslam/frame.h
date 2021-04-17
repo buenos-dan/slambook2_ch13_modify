@@ -4,7 +4,12 @@
 #define MYSLAM_FRAME_H
 
 #include "myslam/camera.h"
+#include "myslam/OrbExtractor.h"
+#include "myslam/OrbMatcher.h"
+#include "myslam/feature.h"
 #include "myslam/common_include.h"
+
+#include <memory>
 
 namespace myslam {
 
@@ -16,7 +21,7 @@ struct Feature;
  * 帧
  * 每一帧分配独立id，关键帧分配关键帧ID
  */
-struct Frame {
+struct Frame : std::enable_shared_from_this<Frame> {
    public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
     typedef std::shared_ptr<Frame> Ptr;
@@ -33,6 +38,8 @@ struct Frame {
     std::vector<std::shared_ptr<Feature>> features_left_;
     // corresponding features in right image, set to nullptr if no corresponding
     std::vector<std::shared_ptr<Feature>> features_right_;
+    cv::Mat descs_left_;
+    cv::Mat descs_right;
 
    public:  // data members
     Frame() {}
@@ -50,6 +57,12 @@ struct Frame {
         std::unique_lock<std::mutex> lck(pose_mutex_);
         pose_ = pose;
     }
+
+    // 提取左右图片的特征并进行匹配,将 匹配成功 特征依次放在features_left_与features_right_中
+    // 返回匹配对数
+    int ExtractAndMatch(OrbExtractor *orbExtractor, OrbMatcher *orbMatcher);
+
+    cv::Mat GetDescriptors();
 
     /// 设置关键帧并分配并键帧id
     void SetKeyFrame();
