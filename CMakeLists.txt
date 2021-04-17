@@ -16,6 +16,9 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 # Eigen
 include_directories("/usr/include/eigen3")
 
+# DBoW2
+include_directories( ${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/ )
+
 # OpenCV
 find_package(OpenCV 3.1 REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
