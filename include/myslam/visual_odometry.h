@@ -7,6 +7,7 @@
 #include "myslam/dataset.h"
 #include "myslam/frontend.h"
 #include "myslam/viewer.h"
+#include "myslam/loopclosing.h"
 
 namespace myslam {
 
@@ -17,6 +18,8 @@ class VisualOdometry {
    public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
     typedef std::shared_ptr<VisualOdometry> Ptr;
+    typedef DBoW2::TemplatedVocabulary<DBoW2::FORB::TDescriptor, DBoW2::FORB>
+    ORBVocabulary;
 
     /// constructor with config file
     VisualOdometry(std::string &config_path);
@@ -46,11 +49,18 @@ class VisualOdometry {
 
     Frontend::Ptr frontend_ = nullptr;
     Backend::Ptr backend_ = nullptr;
+    LoopClosing::Ptr loopclosing_ = nullptr;
     Map::Ptr map_ = nullptr;
     Viewer::Ptr viewer_ = nullptr;
 
     // dataset
     Dataset::Ptr dataset_ = nullptr;
+
+    //vocab
+    ORBVocabulary * vocab = nullptr;
+
+    // globalBA
+    std::atomic<bool> globalBA_flag_;
 };
 }  // namespace myslam
 

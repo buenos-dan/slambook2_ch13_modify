@@ -6,6 +6,11 @@
 
 namespace myslam {
 
+    LoopClosing::LoopClosing() {
+        // backend_running_.store(true);
+        loopclosing_thread_ = std::thread(std::bind(&LoopClosing::Run, this));
+    }
+
     void LoopClosing::Run()
     {
         while(1)
@@ -36,25 +41,41 @@ namespace myslam {
 
         cv::Mat descriptor_ = currentKF_ -> GetDescriptor();
         Map::KeyframesType keyFrames_ = map_ -> GetAllKeyFrames();  // unordered_map<long, Frame>
+        long maxScoreKFid = -1;
+        double maxScore = 0;
         for (auto it = keyFrames_.begin(); it != keyFrames_.end(); ++it) {
-            // DBoW3::BowVector v1, v2;
-            // cv::Mat prevDescriptor = it -> second -> GetDescriptor();
-            // vocab.transform(descriptor_, v1);
-            // vocab.transform(prevDescriptor, v2);
-            // for (int j = i; j < images.size(); j++) {
-            //     DBoW3::BowVector v2;
-            //     vocab.transform(descriptors[j], v2);
-            //     double score = vocab.score(v1, v2);
-            //     cout << "image " << i << " vs image " << j << " : " << score << endl;
-            // }
-            // cout << endl;
+            DBoW2::BowVector v1, v2;
+            cv::Mat prevDescriptor = it -> second -> GetDescriptor();
+            vocab_ -> transform(descriptor_, v1);
+            vocab_ -> transform(prevDescriptor, v2);
+            double score = vocab_ -> score(v1, v2);
+            if(score > maxScore){
+                score = maxScore;
+                maxScoreKFid = it -> first;
+            }
         }
+
+        if(maxScore < LOOPTHRES){
+            return false;
+        }
+
+        std::cout<< "check loopclosing, start GBA." << std::endl;
+        startKFid = maxScoreKFid;
         return true;
     }
 
     void LoopClosing::GlobalBA(){
-        
+        std::thread gba_ = std::thread(std::bind(&LoopClosing::RunGlobalBA, this));
+    }
+
+    void LoopClosing::RunGlobalBA(){
+        // notify backend to run globalBA.
+        globalBA_flag_->store(true);
     }
 
     void LoopClosing::SetMap(Map::Ptr map) { map_ = map; }
+
+    void LoopClosing::SetVocab(ORBVocabulary * vocab) { vocab_ = vocab; }
+
+    void LoopClosing::SetFlag(std::atomic<bool> * flag) { globalBA_flag_ = flag; }
 }

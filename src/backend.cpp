@@ -32,10 +32,19 @@ void Backend::BackendLoop() {
         std::unique_lock<std::mutex> lock(data_mutex_);
         map_update_.wait(lock);
 
-        /// 后端仅优化激活的Frames和Landmarks
-        Map::KeyframesType active_kfs = map_->GetActiveKeyFrames();
-        Map::LandmarksType active_landmarks = map_->GetActiveMapPoints();
-        Optimize(active_kfs, active_landmarks);
+
+        if( globalBA_flag_ -> load()){
+            /// global bundle adjustment
+            Map::KeyframesType kfs = map_->GetAllKeyFrames();
+            Map::LandmarksType landmarks = map_->GetAllMapPoints();
+            Optimize(kfs, landmarks);
+            globalBA_flag_ -> store(false);
+        } else {
+            /// 后端仅优化激活的Frames和Landmarks
+            Map::KeyframesType active_kfs = map_->GetActiveKeyFrames();
+            Map::LandmarksType active_landmarks = map_->GetActiveMapPoints();
+            Optimize(active_kfs, active_landmarks);
+        }
     }
 }
 
@@ -171,5 +180,7 @@ void Backend::Optimize(Map::KeyframesType &keyframes,
         landmarks.at(v.first)->SetPos(v.second->estimate());
     }
 }
+
+    void Backend::SetFlag(std::atomic<bool> * flag) { globalBA_flag_ = flag; }
 
 }  // namespace myslam
