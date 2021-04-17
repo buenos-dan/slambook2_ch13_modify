@@ -5,6 +5,8 @@
 
 #include "myslam/camera.h"
 #include "myslam/common_include.h"
+#include "DBoW2/BowVector.h"
+#include "DBoW2/FeatureVector.h"
 
 namespace myslam {
 
@@ -53,6 +55,8 @@ struct Frame {
 
     /// 设置关键帧并分配并键帧id
     void SetKeyFrame();
+
+    cv::Mat GetDescriptor();
 
     /// 工厂构建模式，分配id 
     static std::shared_ptr<Frame> CreateFrame();

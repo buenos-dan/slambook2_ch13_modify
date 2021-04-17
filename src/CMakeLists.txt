@@ -1,4 +1,5 @@
 add_library(myslam SHARED
+        loopclosing.cpp
         frame.cpp
         mappoint.cpp
         map.cpp

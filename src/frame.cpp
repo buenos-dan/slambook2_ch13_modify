@@ -37,4 +37,8 @@ void Frame::SetKeyFrame() {
     keyframe_id_ = keyframe_factory_id++;
 }
 
+cv::Mat Frame::GetDescriptor(){
+    return cv::Mat();
+}
+
 }
