@@ -56,9 +56,10 @@ struct Frame {
     void SetKeyFrame();
 
     cv::Mat GetDescriptor();
-    void SetORBDetector(cv::Ptr< cv::Feature2D> * detector);
-    cv::Ptr< cv::Feature2D > * myDetector_;
+    void SetORBDetector(cv::Ptr< cv::ORB> detector);
+    cv::Ptr< cv::ORB > myDetector_;
     cv::Mat descriptor_;
+    vector<cv::KeyPoint> kps_;
 
     /// 工厂构建模式，分配id 
     static std::shared_ptr<Frame> CreateFrame();
