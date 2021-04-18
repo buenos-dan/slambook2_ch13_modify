@@ -16,6 +16,7 @@
 namespace myslam {
 
 Frontend::Frontend() {
+    orbDetector_ = cv::ORB::create();
     gftt_ =
         cv::GFTTDetector::create(Config::Get<int>("num_features"), 0.01, 20);
     num_features_init_ = Config::Get<int>("num_features_init");
@@ -61,7 +62,10 @@ bool Frontend::Track() {
         status_ = FrontendStatus::LOST;
     }
 
-    InsertKeyframe();
+    bool ret = InsertKeyframe();
+    if(ret){
+
+    }
     relative_motion_ = current_frame_->Pose() * last_frame_->Pose().inverse();
 
     if (viewer_) viewer_->AddCurrentFrame(current_frame_);
@@ -73,6 +77,14 @@ bool Frontend::InsertKeyframe() {
         // still have enough features, don't insert keyframe
         return false;
     }
+    // extract descriptor
+    cv::Mat desc;
+    std::vector<cv::KeyPoint> kps;
+    // cv::imshow("hello", current_frame_->left_img_);
+    // cv::waitKey(0);
+    orbDetector_->detectAndCompute(current_frame_->left_img_, cv::Mat(), kps, desc);
+    current_frame_->SetDescriptor(desc);
+
     // current frame is a new keyframe
     current_frame_->SetKeyFrame();
     map_->InsertKeyFrame(current_frame_);
@@ -95,6 +107,7 @@ bool Frontend::InsertKeyframe() {
 
     return true;
 }
+
 
 void Frontend::SetLoopKFQueue(std::list<Frame::Ptr> * q) { loopKeyFrameQueue = q; };
 void Frontend::SetMutexLoopQueeu(std::mutex *  m){ mutexLoopQueue = m; };

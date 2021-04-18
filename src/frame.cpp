@@ -35,15 +35,14 @@ void Frame::SetKeyFrame() {
     static long keyframe_factory_id = 0;
     is_keyframe_ = true;
     keyframe_id_ = keyframe_factory_id++;
-    myDetector_ -> detectAndCompute(left_img_, Mat(), kps_, descriptor_);
-    LOG(INFO) << "================================";
 }
 
 cv::Mat Frame::GetDescriptor(){
     return descriptor_;
 };
-void Frame::SetORBDetector(cv::Ptr< cv::ORB> detector){
-    myDetector_ = detector;
+
+void Frame::SetDescriptor(cv::Mat &descriptor){
+    descriptor_ = descriptor;
 };
 
 }

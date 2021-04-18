@@ -22,6 +22,10 @@ bool VisualOdometry::Init() {
 
     LOG(INFO) << "load vocab";
     DBoW3::Vocabulary vocab("./Thirdparty/vocab_larger.yml.gz");
+    if(vocab.empty()){
+        LOG(INFO) << "vocab is empty. exit...";
+        return false;
+    };
     LOG(INFO) << "done !!!";
 
 

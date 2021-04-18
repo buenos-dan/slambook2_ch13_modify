@@ -8,8 +8,6 @@ namespace myslam {
 
     LoopClosing::LoopClosing() {
         // backend_running_.store(true);
-        // DBoW3::Vocabulary vocab("./Thirdparty/ORBvoc.txt");
-        // vocab_ = vocab;
         loopclosing_thread_ = std::thread(std::bind(&LoopClosing::Run, this));
     }
 
@@ -21,7 +19,7 @@ namespace myslam {
             {
                 if(DetectLoop())
                 {
-                    // GlobalBA();
+                    GlobalBA();
                 }
             }     
             LOG(INFO)<< "loopclosing is Running...";
@@ -43,47 +41,53 @@ namespace myslam {
             loopKeyFrameQueue -> pop_front();
         }
        
-        if(currentKF_ ->id_ < lastLoopKFid + 10){
+        if(currentKF_ ->id_ < lastLoopKFid + 50){
             return false;
         }
 
-        LOG(INFO) << "detectLoop ...";
+        // LOG(INFO) << "detectLoop ...";
 
-        cv::Mat descriptor_ = GetDescriptor(currentKF_);
-        Map::KeyframesType keyFrames_ = map_ -> GetAllKeyFrames();  // unordered_map<long, Frame>
-        long maxScoreKFid = -1;
-        double maxScore = 0;
-        DBoW3::BowVector v1, v2;
-        vocab_ -> transform(descriptor_, v1);
-         LOG(INFO) << "here";
-        for (auto it = keyFrames_.begin(); it != keyFrames_.end(); ++it) {
-            cv::Mat prevDescriptor = GetDescriptor(it -> second);
-            vocab_ -> transform(prevDescriptor, v2);
+        // cv::Mat descriptor = currentKF_ -> GetDescriptor();
+        // if(descriptor.empty()){
+        //     LOG(INFO) << "descriptor is nullptr ...";
+        //     return false;
+        // }
+        // DBoW3::BowVector v1, v2;
+        // // return false;
+        // vocab_ -> transform(cv::Mat(), v1);
+        // LOG(INFO) << "here";
+        // Map::KeyframesType keyFrames_ = map_ -> GetAllKeyFrames();  // unordered_map<long, Frame>
+        // long maxScoreKFid = -1;
+        // double maxScore = 0;
+        // for (auto it = keyFrames_.begin(); it != keyFrames_.end(); ++it) {
+        //     cv::Mat prevDescriptor = it -> second -> GetDescriptor();
+        //     vocab_ -> transform(prevDescriptor, v2);
               
-            double score = vocab_ -> score(v1, v2);
-            if(score > maxScore){
-                score = maxScore;
-                maxScoreKFid = it -> first;
-            }
-        }
+        //     double score = vocab_ -> score(v1, v2);
+        //     if(score > maxScore){
+        //         score = maxScore;
+        //         maxScoreKFid = it -> first;
+        //     }
+        // }
 
-        if(maxScore < LOOPTHRES){
-            return false;
-        }
+        // if(maxScore < LOOPTHRES){
+        //     return false;
+        // }
 
-        std::cout<< "check loopclosing, start GBA." << std::endl;
-        startKFid = maxScoreKFid;
+        // std::cout<< "check loopclosing, start GBA." << std::endl;
+        // startKFid = maxScoreKFid;
         return true;
     }
 
     void LoopClosing::GlobalBA(){
         LOG(INFO) << "start gba";
-        std::thread gba_ = std::thread(std::bind(&LoopClosing::RunGlobalBA, this));
+        // std::thread gba_ = std::thread(std::bind(&LoopClosing::RunGlobalBA, this));
+         // notify backend to run globalBA.
+        globalBA_flag_->store(true);
     }
 
     void LoopClosing::RunGlobalBA(){
-        // notify backend to run globalBA.
-        globalBA_flag_->store(true);
+       
     }
 
     void LoopClosing::SetMap(Map::Ptr map) { map_ = map; }
@@ -94,15 +98,4 @@ namespace myslam {
 
     void LoopClosing::SetLoopKFQueue(std::list<Frame::Ptr> * q) { loopKeyFrameQueue = q; };
     void LoopClosing::SetMutexLoopQueeu(std::mutex *  m){ mutexLoopQueue = m; };
-
-    cv::Mat LoopClosing::GetDescriptor(Frame::Ptr frame){
-        std::vector<std::shared_ptr<Feature>> features = frame -> features_left_;
-        std::vector<cv::KeyPoint> kps;
-        cv::Mat descptors;
-        for(std::shared_ptr<Feature> feat: features){
-            kps.push_back(feat -> position_);
-        }
-        descriptor_->compute(frame -> left_img_, kps, descptors);
-        return descptors;
-    }
 }

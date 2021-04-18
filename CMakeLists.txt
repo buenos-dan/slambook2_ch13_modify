@@ -17,7 +17,9 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 include_directories("/usr/include/eigen3")
 
 # DBoW3
-include_directories( ${PROJECT_SOURCE_DIR}/Thirdparty/DBow3/ )
+# include_directories( ${PROJECT_SOURCE_DIR}/Thirdparty/DBow3/ )
+set( DBoW3_INCLUDE_DIRS "/usr/local/include" )
+set( DBoW3_LIBS "/usr/local/lib/libDBoW3.so" )
 
 # OpenCV
 find_package(OpenCV 3.1 REQUIRED)
@@ -61,7 +63,7 @@ set(THIRD_PARTY_LIBS
         ${GFLAGS_LIBRARIES}
         pthread
         ${CSPARSE_LIBRARY}
-        ${PROJECT_SOURCE_DIR}/Thirdparty/DBow3/build/src/libDBoW3.so
+        ${DBoW3_LIBS}
         )
 
 enable_testing()

@@ -8,7 +8,7 @@
 #include "myslam/g2o_types.h"
 #include "myslam/feature.h"
 #include "myslam/algorithm.h"
-#include "src/DBoW3.h"
+#include "DBoW3/DBoW3.h"
 
 namespace myslam {
 
@@ -29,13 +29,12 @@ public:
     void SetLoopKFQueue(std::list<Frame::Ptr> * q);
     void SetMutexLoopQueeu(std::mutex *  m);
     void RunGlobalBA();
-    cv::Mat GetDescriptor(Frame::Ptr frame);
 
 protected:
     std::list<Frame::Ptr> * loopKeyFrameQueue;
     std::mutex * mutexLoopQueue;
     Map::Ptr map_ = nullptr;
-    DBoW3::Vocabulary * vocab_;
+    DBoW3::Vocabulary * vocab_ = nullptr;
     long lastLoopKFid = 0;
     double LOOPTHRES = 0.03;
     long startKFid = -1;

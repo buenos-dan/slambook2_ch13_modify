@@ -26,6 +26,7 @@ class Frontend {
 
     Frontend();
 
+    cv::Ptr<cv::ORB> orbDetector_;
     void SetLoopKFQueue(std::list<Frame::Ptr> * q);
     void SetMutexLoopQueeu(std::mutex *  m);
     void InsertLoopKFQueue(Frame::Ptr frame);
