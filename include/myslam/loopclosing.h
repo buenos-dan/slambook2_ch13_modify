@@ -30,6 +30,7 @@ public:
     void SetVocab(ORBVocabulary * vocab);
     void SetFlag(std::atomic<bool> * flag);
     void RunGlobalBA();
+    cv::Mat GetDescriptor(Frame::Ptr frame);
 
 protected:
     std::list<Frame::Ptr> loopKeyFrameQueue;
@@ -44,6 +45,8 @@ protected:
     std::thread loopclosing_thread_;
 
     std::atomic<bool> * globalBA_flag_;
+
+    cv::Ptr<cv::DescriptorExtractor> descriptor_ = cv::ORB::create();
 
 
 };

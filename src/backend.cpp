@@ -33,18 +33,18 @@ void Backend::BackendLoop() {
         map_update_.wait(lock);
 
 
-        if( globalBA_flag_ -> load()){
-            /// global bundle adjustment
-            Map::KeyframesType kfs = map_->GetAllKeyFrames();
-            Map::LandmarksType landmarks = map_->GetAllMapPoints();
-            Optimize(kfs, landmarks);
-            globalBA_flag_ -> store(false);
-        } else {
+        // if( globalBA_flag_ -> load()){
+        //     /// global bundle adjustment
+        //     Map::KeyframesType kfs = map_->GetAllKeyFrames();
+        //     Map::LandmarksType landmarks = map_->GetAllMapPoints();
+        //     Optimize(kfs, landmarks);
+        //     globalBA_flag_ -> store(false);
+        // } else {
             /// 后端仅优化激活的Frames和Landmarks
             Map::KeyframesType active_kfs = map_->GetActiveKeyFrames();
             Map::LandmarksType active_landmarks = map_->GetActiveMapPoints();
             Optimize(active_kfs, active_landmarks);
-        }
+        // }
     }
 }
 

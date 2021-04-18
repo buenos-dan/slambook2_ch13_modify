@@ -56,7 +56,6 @@ struct Frame {
     /// 设置关键帧并分配并键帧id
     void SetKeyFrame();
 
-    cv::Mat GetDescriptor();
 
     /// 工厂构建模式，分配id 
     static std::shared_ptr<Frame> CreateFrame();

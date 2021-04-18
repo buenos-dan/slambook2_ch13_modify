@@ -39,13 +39,13 @@ namespace myslam {
             return false;
         }
 
-        cv::Mat descriptor_ = currentKF_ -> GetDescriptor();
+        cv::Mat descriptor_ = GetDescriptor(currentKF_);
         Map::KeyframesType keyFrames_ = map_ -> GetAllKeyFrames();  // unordered_map<long, Frame>
         long maxScoreKFid = -1;
         double maxScore = 0;
         for (auto it = keyFrames_.begin(); it != keyFrames_.end(); ++it) {
             DBoW2::BowVector v1, v2;
-            cv::Mat prevDescriptor = it -> second -> GetDescriptor();
+            cv::Mat prevDescriptor = GetDescriptor(it -> second);
             vocab_ -> transform(descriptor_, v1);
             vocab_ -> transform(prevDescriptor, v2);
             double score = vocab_ -> score(v1, v2);
@@ -78,4 +78,15 @@ namespace myslam {
     void LoopClosing::SetVocab(ORBVocabulary * vocab) { vocab_ = vocab; }
 
     void LoopClosing::SetFlag(std::atomic<bool> * flag) { globalBA_flag_ = flag; }
+
+    cv::Mat LoopClosing::GetDescriptor(Frame::Ptr frame){
+        std::vector<std::shared_ptr<Feature>> features = frame -> features_left_;
+        std::vector<cv::KeyPoint> kps;
+        cv::Mat descptors;
+        for(std::shared_ptr<Feature> feat: features){
+            kps.push_back(feat -> position_);
+        }
+        descriptor_->compute(frame -> left_img_, kps, descptors);
+        return descptors;
+    }
 }
