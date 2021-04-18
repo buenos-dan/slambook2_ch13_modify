@@ -26,6 +26,12 @@ class Frontend {
 
     Frontend();
 
+    void SetLoopKFQueue(std::list<Frame::Ptr> * q);
+    void SetMutexLoopQueeu(std::mutex *  m);
+    void InsertLoopKFQueue(Frame::Ptr frame);
+    std::list<Frame::Ptr> * loopKeyFrameQueue;
+    std::mutex * mutexLoopQueue;
+
     /// 外部接口，添加一个帧并计算其定位结果
     bool AddFrame(Frame::Ptr frame);
 
@@ -109,6 +115,8 @@ class Frontend {
      * Set the features in keyframe as new observation of the map points
      */
     void SetObservationsForKeyFrame();
+
+   
 
     // data
     FrontendStatus status_ = FrontendStatus::INITING;

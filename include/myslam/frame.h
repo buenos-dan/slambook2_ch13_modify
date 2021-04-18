@@ -5,8 +5,7 @@
 
 #include "myslam/camera.h"
 #include "myslam/common_include.h"
-#include "DBoW2/BowVector.h"
-#include "DBoW2/FeatureVector.h"
+#include <opencv2/features2d/features2d.hpp>
 
 namespace myslam {
 
@@ -56,6 +55,10 @@ struct Frame {
     /// 设置关键帧并分配并键帧id
     void SetKeyFrame();
 
+    cv::Mat GetDescriptor();
+    void SetORBDetector(cv::Ptr< cv::Feature2D> * detector);
+    cv::Ptr< cv::Feature2D > * myDetector_;
+    cv::Mat descriptor_;
 
     /// 工厂构建模式，分配id 
     static std::shared_ptr<Frame> CreateFrame();

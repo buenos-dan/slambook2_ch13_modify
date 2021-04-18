@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(myslam)
 
-# set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
+# set(CMAKE_BUILD_TYPE Debug)
 
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall")
@@ -16,8 +16,8 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 # Eigen
 include_directories("/usr/include/eigen3")
 
-# DBoW2
-include_directories( ${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/ )
+# DBoW3
+include_directories( ${PROJECT_SOURCE_DIR}/Thirdparty/DBow3/ )
 
 # OpenCV
 find_package(OpenCV 3.1 REQUIRED)
@@ -61,7 +61,7 @@ set(THIRD_PARTY_LIBS
         ${GFLAGS_LIBRARIES}
         pthread
         ${CSPARSE_LIBRARY}
-        ${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/libDBoW2.so
+        ${PROJECT_SOURCE_DIR}/Thirdparty/DBow3/build/src/libDBoW3.so
         )
 
 enable_testing()

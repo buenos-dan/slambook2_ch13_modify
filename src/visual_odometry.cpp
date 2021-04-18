@@ -20,10 +20,15 @@ bool VisualOdometry::Init() {
         Dataset::Ptr(new Dataset(Config::Get<std::string>("dataset_dir")));
     CHECK_EQ(dataset_->Init(), true);
 
+    LOG(INFO) << "load vocab";
+    DBoW3::Vocabulary vocab("./Thirdparty/vocab_larger.yml.gz");
+    LOG(INFO) << "done !!!";
+
+
     // create components and links
     frontend_ = Frontend::Ptr(new Frontend);
     backend_ = Backend::Ptr(new Backend);
-    // loopclosing_ = LoopClosing::Ptr(new LoopClosing);
+    loopclosing_ = LoopClosing::Ptr(new LoopClosing);
     map_ = Map::Ptr(new Map);
     viewer_ = Viewer::Ptr(new Viewer);
 
@@ -35,14 +40,23 @@ bool VisualOdometry::Init() {
     backend_->SetMap(map_);
     backend_->SetCameras(dataset_->GetCamera(0), dataset_->GetCamera(1));
 
-    // loopclosing_->SetMap(map_);
-    // loopclosing_->SetVocab(vocab);
+    loopclosing_->SetMap(map_);
+    loopclosing_->SetVocab(&vocab);
 
     viewer_->SetMap(map_);
 
     globalBA_flag_.store(false);
     backend_->SetFlag(&globalBA_flag_);
-    // loopclosing_->SetFlag(&globalBA_flag_);
+    loopclosing_->SetFlag(&globalBA_flag_);
+
+    // ...
+    mutexLoopQueue = new std::mutex;
+    loopKeyFrameQueue = new std::list<Frame::Ptr>;
+
+    frontend_ -> SetLoopKFQueue(loopKeyFrameQueue);
+    frontend_ -> SetMutexLoopQueeu(mutexLoopQueue);
+    loopclosing_ -> SetLoopKFQueue(loopKeyFrameQueue);
+    loopclosing_ -> SetMutexLoopQueeu(mutexLoopQueue);
 
     return true;
 }

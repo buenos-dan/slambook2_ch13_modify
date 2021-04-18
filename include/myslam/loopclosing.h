@@ -8,15 +8,12 @@
 #include "myslam/g2o_types.h"
 #include "myslam/feature.h"
 #include "myslam/algorithm.h"
-#include "DBoW2/FORB.h"
-#include "DBoW2/TemplatedVocabulary.h"
+#include "src/DBoW3.h"
 
 namespace myslam {
 
 class LoopClosing{
 public:
-    typedef DBoW2::TemplatedVocabulary<DBoW2::FORB::TDescriptor, DBoW2::FORB>
-    ORBVocabulary;
     typedef std::shared_ptr<LoopClosing> Ptr;
     // pass
 
@@ -27,16 +24,18 @@ public:
     bool DetectLoop();
     void GlobalBA();
     void SetMap(Map::Ptr map);
-    void SetVocab(ORBVocabulary * vocab);
+    void SetVocab(DBoW3::Vocabulary * vocab);
     void SetFlag(std::atomic<bool> * flag);
+    void SetLoopKFQueue(std::list<Frame::Ptr> * q);
+    void SetMutexLoopQueeu(std::mutex *  m);
     void RunGlobalBA();
     cv::Mat GetDescriptor(Frame::Ptr frame);
 
 protected:
-    std::list<Frame::Ptr> loopKeyFrameQueue;
-    std::mutex mutexLoopQueue;
+    std::list<Frame::Ptr> * loopKeyFrameQueue;
+    std::mutex * mutexLoopQueue;
     Map::Ptr map_ = nullptr;
-    ORBVocabulary * vocab_ = nullptr;
+    DBoW3::Vocabulary * vocab_;
     long lastLoopKFid = 0;
     double LOOPTHRES = 0.03;
     long startKFid = -1;

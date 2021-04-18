@@ -18,9 +18,7 @@ class VisualOdometry {
    public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
     typedef std::shared_ptr<VisualOdometry> Ptr;
-    typedef DBoW2::TemplatedVocabulary<DBoW2::FORB::TDescriptor, DBoW2::FORB>
-    ORBVocabulary;
-
+    
     /// constructor with config file
     VisualOdometry(std::string &config_path);
 
@@ -56,11 +54,11 @@ class VisualOdometry {
     // dataset
     Dataset::Ptr dataset_ = nullptr;
 
-    //vocab
-    ORBVocabulary * vocab = nullptr;
-
     // globalBA
     std::atomic<bool> globalBA_flag_;
+
+    std::mutex * mutexLoopQueue;
+    std::list<Frame::Ptr> * loopKeyFrameQueue;
 };
 }  // namespace myslam
 

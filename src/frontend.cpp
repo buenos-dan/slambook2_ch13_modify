@@ -76,6 +76,7 @@ bool Frontend::InsertKeyframe() {
     // current frame is a new keyframe
     current_frame_->SetKeyFrame();
     map_->InsertKeyFrame(current_frame_);
+    InsertLoopKFQueue(current_frame_);
 
     LOG(INFO) << "Set frame " << current_frame_->id_ << " as keyframe "
               << current_frame_->keyframe_id_;
@@ -93,6 +94,14 @@ bool Frontend::InsertKeyframe() {
     if (viewer_) viewer_->UpdateMap();
 
     return true;
+}
+
+void Frontend::SetLoopKFQueue(std::list<Frame::Ptr> * q) { loopKeyFrameQueue = q; };
+void Frontend::SetMutexLoopQueeu(std::mutex *  m){ mutexLoopQueue = m; };
+
+void Frontend::InsertLoopKFQueue(Frame::Ptr frame) {
+    std::unique_lock<std::mutex> lock(*mutexLoopQueue);
+    loopKeyFrameQueue -> push_back(frame);
 }
 
 void Frontend::SetObservationsForKeyFrame() {
