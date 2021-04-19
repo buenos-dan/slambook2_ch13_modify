@@ -1,4 +1,4 @@
-# Install script for directory: /home/buenos/new_slam/ORB_SLAM2/Thirdparty/DBoW2
+# Install script for directory: /home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -37,6 +37,78 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  if(EXISTS "$ENV{DESTDIR}/usr/local/lib/libDBoW2.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/usr/local/lib/libDBoW2.so")
+    file(RPATH_CHECK
+         FILE "$ENV{DESTDIR}/usr/local/lib/libDBoW2.so"
+         RPATH "")
+  endif()
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/usr/local/lib/libDBoW2.so")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/usr/local/lib" TYPE SHARED_LIBRARY FILES "/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/libDBoW2.so")
+  if(EXISTS "$ENV{DESTDIR}/usr/local/lib/libDBoW2.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/usr/local/lib/libDBoW2.so")
+    if(CMAKE_INSTALL_DO_STRIP)
+      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}/usr/local/lib/libDBoW2.so")
+    endif()
+  endif()
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/usr/local/include/DBoW2")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/usr/local/include" TYPE DIRECTORY FILES "/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/include/DBoW2")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/usr/local/include/DBoW2/DBoW2Config.cmake")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/usr/local/include/DBoW2" TYPE FILE FILES "/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/DBoW2Config.cmake")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/usr/local/lib/cmake/DBoW2/DBoW2Config.cmake")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/usr/local/lib/cmake/DBoW2" TYPE FILE FILES "/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/DBoW2Config.cmake")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/usr/local/")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/usr/local" TYPE DIRECTORY OPTIONAL FILES "/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/dependencies/install/")
+endif()
+
 if(CMAKE_INSTALL_COMPONENT)
   set(CMAKE_INSTALL_MANIFEST "install_manifest_${CMAKE_INSTALL_COMPONENT}.txt")
 else()
@@ -45,5 +117,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/buenos/new_slam/ORB_SLAM2/Thirdparty/DBoW2/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

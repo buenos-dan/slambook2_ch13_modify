@@ -45,6 +45,15 @@ namespace myslam {
             return false;
         }
 
+        QueryResults ret;
+        // TicToc t_query;
+        db.query(currentKF_->briefDescriptors, ret, 4, frame_index - 50);
+        //printf("query time: %f", t_query.toc());
+        //cout << "Searching for Image " << frame_index << ". " << ret << endl;
+
+        // TicToc t_add;
+        db.add(currentKF_->briefDescriptors);
+
         // LOG(INFO) << "detectLoop ...";
 
         // cv::Mat descriptor = currentKF_ -> GetDescriptor();
@@ -92,7 +101,10 @@ namespace myslam {
 
     void LoopClosing::SetMap(Map::Ptr map) { map_ = map; }
 
-    void LoopClosing::SetVocab(DBoW3::Vocabulary * vocab){ vocab_ = vocab; };
+    void LoopClosing::SetVocab(BriefVocabulary * vocab){ 
+        voc_ = vocab; 
+        db_.setVocabulary(*voc_, false, 0);
+    };
 
     void LoopClosing::SetFlag(std::atomic<bool> * flag) { globalBA_flag_ = flag; }
 

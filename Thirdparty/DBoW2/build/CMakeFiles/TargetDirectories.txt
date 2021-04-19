@@ -1,3 +1,8 @@
-/home/buenos/new_slam/ORB_SLAM2/Thirdparty/DBoW2/build/CMakeFiles/rebuild_cache.dir
-/home/buenos/new_slam/ORB_SLAM2/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir
-/home/buenos/new_slam/ORB_SLAM2/Thirdparty/DBoW2/build/CMakeFiles/edit_cache.dir
+/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/CMakeFiles/install/strip.dir
+/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/CMakeFiles/install/local.dir
+/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/CMakeFiles/install.dir
+/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/CMakeFiles/demo.dir
+/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir
+/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/CMakeFiles/edit_cache.dir
+/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/CMakeFiles/rebuild_cache.dir
+/home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/CMakeFiles/list_install_components.dir

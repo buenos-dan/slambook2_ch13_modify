@@ -13,6 +13,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/3.10.2/CMakeSystem.cmake"
   "CMakeFiles/feature_tests.c"
   "CMakeFiles/feature_tests.cxx"
+  "../src/DBoW2.cmake.in"
   "/usr/share/OpenCV/OpenCVConfig-version.cmake"
   "/usr/share/OpenCV/OpenCVConfig.cmake"
   "/usr/share/OpenCV/OpenCVModules-release.cmake"
@@ -91,6 +92,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake-3.10/Modules/Compiler/XL-CXX-DetermineCompiler.cmake"
   "/usr/share/cmake-3.10/Modules/Compiler/zOS-C-DetermineCompiler.cmake"
   "/usr/share/cmake-3.10/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake"
+  "/usr/share/cmake-3.10/Modules/ExternalProject.cmake"
   "/usr/share/cmake-3.10/Modules/FindPackageHandleStandardArgs.cmake"
   "/usr/share/cmake-3.10/Modules/FindPackageMessage.cmake"
   "/usr/share/cmake-3.10/Modules/Internal/FeatureTesting.cmake"
@@ -115,10 +117,12 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "CMakeFiles/3.10.2/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.10.2/CMakeCCompiler.cmake"
   "CMakeFiles/3.10.2/CMakeCXXCompiler.cmake"
+  "DBoW2Config.cmake"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
+  "CMakeFiles/demo.dir/DependInfo.cmake"
   "CMakeFiles/DBoW2.dir/DependInfo.cmake"
   )

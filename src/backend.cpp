@@ -34,7 +34,7 @@ void Backend::BackendLoop() {
 
 
         if( globalBA_flag_ -> load()){
-            LOG(INFO) << "============================"
+            LOG(INFO) << "============================";
             /// global bundle adjustment
             Map::KeyframesType kfs = map_->GetAllKeyFrames();
             Map::LandmarksType landmarks = map_->GetAllMapPoints();

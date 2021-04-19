@@ -48,24 +48,49 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/buenos/new_slam/ORB_SLAM2/Thirdparty/DBoW2
+CMAKE_SOURCE_DIR = /home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/buenos/new_slam/ORB_SLAM2/Thirdparty/DBoW2/build
+CMAKE_BINARY_DIR = /home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build
 
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
 
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
 
-.PHONY : rebuild_cache/fast
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
 
 # Special rule for the target edit_cache
 edit_cache:
@@ -78,11 +103,32 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/buenos/new_slam/ORB_SLAM2/Thirdparty/DBoW2/build/CMakeFiles /home/buenos/new_slam/ORB_SLAM2/Thirdparty/DBoW2/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/CMakeFiles /home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/buenos/new_slam/ORB_SLAM2/Thirdparty/DBoW2/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/buenos/new_slam/slambook2/ch13/Thirdparty/DBoW2/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,6 +157,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named demo
+
+# Build rule for target.
+demo: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 demo
+.PHONY : demo
+
+# fast build rule for target.
+demo/fast:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/build
+.PHONY : demo/fast
+
+#=============================================================================
 # Target rules for targets named DBoW2
 
 # Build rule for target.
@@ -123,167 +182,194 @@ DBoW2/fast:
 	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/build
 .PHONY : DBoW2/fast
 
-DBoW2/BowVector.o: DBoW2/BowVector.cpp.o
+demo/demo.o: demo/demo.cpp.o
 
-.PHONY : DBoW2/BowVector.o
-
-# target to build an object file
-DBoW2/BowVector.cpp.o:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DBoW2/BowVector.cpp.o
-.PHONY : DBoW2/BowVector.cpp.o
-
-DBoW2/BowVector.i: DBoW2/BowVector.cpp.i
-
-.PHONY : DBoW2/BowVector.i
-
-# target to preprocess a source file
-DBoW2/BowVector.cpp.i:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DBoW2/BowVector.cpp.i
-.PHONY : DBoW2/BowVector.cpp.i
-
-DBoW2/BowVector.s: DBoW2/BowVector.cpp.s
-
-.PHONY : DBoW2/BowVector.s
-
-# target to generate assembly for a file
-DBoW2/BowVector.cpp.s:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DBoW2/BowVector.cpp.s
-.PHONY : DBoW2/BowVector.cpp.s
-
-DBoW2/FORB.o: DBoW2/FORB.cpp.o
-
-.PHONY : DBoW2/FORB.o
+.PHONY : demo/demo.o
 
 # target to build an object file
-DBoW2/FORB.cpp.o:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DBoW2/FORB.cpp.o
-.PHONY : DBoW2/FORB.cpp.o
+demo/demo.cpp.o:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/demo/demo.cpp.o
+.PHONY : demo/demo.cpp.o
 
-DBoW2/FORB.i: DBoW2/FORB.cpp.i
+demo/demo.i: demo/demo.cpp.i
 
-.PHONY : DBoW2/FORB.i
+.PHONY : demo/demo.i
 
 # target to preprocess a source file
-DBoW2/FORB.cpp.i:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DBoW2/FORB.cpp.i
-.PHONY : DBoW2/FORB.cpp.i
+demo/demo.cpp.i:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/demo/demo.cpp.i
+.PHONY : demo/demo.cpp.i
 
-DBoW2/FORB.s: DBoW2/FORB.cpp.s
+demo/demo.s: demo/demo.cpp.s
 
-.PHONY : DBoW2/FORB.s
+.PHONY : demo/demo.s
 
 # target to generate assembly for a file
-DBoW2/FORB.cpp.s:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DBoW2/FORB.cpp.s
-.PHONY : DBoW2/FORB.cpp.s
+demo/demo.cpp.s:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/demo/demo.cpp.s
+.PHONY : demo/demo.cpp.s
 
-DBoW2/FeatureVector.o: DBoW2/FeatureVector.cpp.o
+src/BowVector.o: src/BowVector.cpp.o
 
-.PHONY : DBoW2/FeatureVector.o
+.PHONY : src/BowVector.o
 
 # target to build an object file
-DBoW2/FeatureVector.cpp.o:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DBoW2/FeatureVector.cpp.o
-.PHONY : DBoW2/FeatureVector.cpp.o
+src/BowVector.cpp.o:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/BowVector.cpp.o
+.PHONY : src/BowVector.cpp.o
 
-DBoW2/FeatureVector.i: DBoW2/FeatureVector.cpp.i
+src/BowVector.i: src/BowVector.cpp.i
 
-.PHONY : DBoW2/FeatureVector.i
+.PHONY : src/BowVector.i
 
 # target to preprocess a source file
-DBoW2/FeatureVector.cpp.i:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DBoW2/FeatureVector.cpp.i
-.PHONY : DBoW2/FeatureVector.cpp.i
+src/BowVector.cpp.i:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/BowVector.cpp.i
+.PHONY : src/BowVector.cpp.i
 
-DBoW2/FeatureVector.s: DBoW2/FeatureVector.cpp.s
+src/BowVector.s: src/BowVector.cpp.s
 
-.PHONY : DBoW2/FeatureVector.s
+.PHONY : src/BowVector.s
 
 # target to generate assembly for a file
-DBoW2/FeatureVector.cpp.s:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DBoW2/FeatureVector.cpp.s
-.PHONY : DBoW2/FeatureVector.cpp.s
+src/BowVector.cpp.s:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/BowVector.cpp.s
+.PHONY : src/BowVector.cpp.s
 
-DBoW2/ScoringObject.o: DBoW2/ScoringObject.cpp.o
+src/FBrief.o: src/FBrief.cpp.o
 
-.PHONY : DBoW2/ScoringObject.o
+.PHONY : src/FBrief.o
 
 # target to build an object file
-DBoW2/ScoringObject.cpp.o:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DBoW2/ScoringObject.cpp.o
-.PHONY : DBoW2/ScoringObject.cpp.o
+src/FBrief.cpp.o:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/FBrief.cpp.o
+.PHONY : src/FBrief.cpp.o
 
-DBoW2/ScoringObject.i: DBoW2/ScoringObject.cpp.i
+src/FBrief.i: src/FBrief.cpp.i
 
-.PHONY : DBoW2/ScoringObject.i
+.PHONY : src/FBrief.i
 
 # target to preprocess a source file
-DBoW2/ScoringObject.cpp.i:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DBoW2/ScoringObject.cpp.i
-.PHONY : DBoW2/ScoringObject.cpp.i
+src/FBrief.cpp.i:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/FBrief.cpp.i
+.PHONY : src/FBrief.cpp.i
 
-DBoW2/ScoringObject.s: DBoW2/ScoringObject.cpp.s
+src/FBrief.s: src/FBrief.cpp.s
 
-.PHONY : DBoW2/ScoringObject.s
+.PHONY : src/FBrief.s
 
 # target to generate assembly for a file
-DBoW2/ScoringObject.cpp.s:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DBoW2/ScoringObject.cpp.s
-.PHONY : DBoW2/ScoringObject.cpp.s
+src/FBrief.cpp.s:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/FBrief.cpp.s
+.PHONY : src/FBrief.cpp.s
 
-DUtils/Random.o: DUtils/Random.cpp.o
+src/FORB.o: src/FORB.cpp.o
 
-.PHONY : DUtils/Random.o
+.PHONY : src/FORB.o
 
 # target to build an object file
-DUtils/Random.cpp.o:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DUtils/Random.cpp.o
-.PHONY : DUtils/Random.cpp.o
+src/FORB.cpp.o:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/FORB.cpp.o
+.PHONY : src/FORB.cpp.o
 
-DUtils/Random.i: DUtils/Random.cpp.i
+src/FORB.i: src/FORB.cpp.i
 
-.PHONY : DUtils/Random.i
+.PHONY : src/FORB.i
 
 # target to preprocess a source file
-DUtils/Random.cpp.i:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DUtils/Random.cpp.i
-.PHONY : DUtils/Random.cpp.i
+src/FORB.cpp.i:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/FORB.cpp.i
+.PHONY : src/FORB.cpp.i
 
-DUtils/Random.s: DUtils/Random.cpp.s
+src/FORB.s: src/FORB.cpp.s
 
-.PHONY : DUtils/Random.s
+.PHONY : src/FORB.s
 
 # target to generate assembly for a file
-DUtils/Random.cpp.s:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DUtils/Random.cpp.s
-.PHONY : DUtils/Random.cpp.s
+src/FORB.cpp.s:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/FORB.cpp.s
+.PHONY : src/FORB.cpp.s
 
-DUtils/Timestamp.o: DUtils/Timestamp.cpp.o
+src/FeatureVector.o: src/FeatureVector.cpp.o
 
-.PHONY : DUtils/Timestamp.o
+.PHONY : src/FeatureVector.o
 
 # target to build an object file
-DUtils/Timestamp.cpp.o:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DUtils/Timestamp.cpp.o
-.PHONY : DUtils/Timestamp.cpp.o
+src/FeatureVector.cpp.o:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/FeatureVector.cpp.o
+.PHONY : src/FeatureVector.cpp.o
 
-DUtils/Timestamp.i: DUtils/Timestamp.cpp.i
+src/FeatureVector.i: src/FeatureVector.cpp.i
 
-.PHONY : DUtils/Timestamp.i
+.PHONY : src/FeatureVector.i
 
 # target to preprocess a source file
-DUtils/Timestamp.cpp.i:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DUtils/Timestamp.cpp.i
-.PHONY : DUtils/Timestamp.cpp.i
+src/FeatureVector.cpp.i:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/FeatureVector.cpp.i
+.PHONY : src/FeatureVector.cpp.i
 
-DUtils/Timestamp.s: DUtils/Timestamp.cpp.s
+src/FeatureVector.s: src/FeatureVector.cpp.s
 
-.PHONY : DUtils/Timestamp.s
+.PHONY : src/FeatureVector.s
 
 # target to generate assembly for a file
-DUtils/Timestamp.cpp.s:
-	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/DUtils/Timestamp.cpp.s
-.PHONY : DUtils/Timestamp.cpp.s
+src/FeatureVector.cpp.s:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/FeatureVector.cpp.s
+.PHONY : src/FeatureVector.cpp.s
+
+src/QueryResults.o: src/QueryResults.cpp.o
+
+.PHONY : src/QueryResults.o
+
+# target to build an object file
+src/QueryResults.cpp.o:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/QueryResults.cpp.o
+.PHONY : src/QueryResults.cpp.o
+
+src/QueryResults.i: src/QueryResults.cpp.i
+
+.PHONY : src/QueryResults.i
+
+# target to preprocess a source file
+src/QueryResults.cpp.i:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/QueryResults.cpp.i
+.PHONY : src/QueryResults.cpp.i
+
+src/QueryResults.s: src/QueryResults.cpp.s
+
+.PHONY : src/QueryResults.s
+
+# target to generate assembly for a file
+src/QueryResults.cpp.s:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/QueryResults.cpp.s
+.PHONY : src/QueryResults.cpp.s
+
+src/ScoringObject.o: src/ScoringObject.cpp.o
+
+.PHONY : src/ScoringObject.o
+
+# target to build an object file
+src/ScoringObject.cpp.o:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/ScoringObject.cpp.o
+.PHONY : src/ScoringObject.cpp.o
+
+src/ScoringObject.i: src/ScoringObject.cpp.i
+
+.PHONY : src/ScoringObject.i
+
+# target to preprocess a source file
+src/ScoringObject.cpp.i:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/ScoringObject.cpp.i
+.PHONY : src/ScoringObject.cpp.i
+
+src/ScoringObject.s: src/ScoringObject.cpp.s
+
+.PHONY : src/ScoringObject.s
+
+# target to generate assembly for a file
+src/ScoringObject.cpp.s:
+	$(MAKE) -f CMakeFiles/DBoW2.dir/build.make CMakeFiles/DBoW2.dir/src/ScoringObject.cpp.s
+.PHONY : src/ScoringObject.cpp.s
 
 # Help Target
 help:
@@ -291,27 +377,35 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
+	@echo "... install/strip"
+	@echo "... install/local"
+	@echo "... install"
+	@echo "... demo"
 	@echo "... DBoW2"
 	@echo "... edit_cache"
-	@echo "... DBoW2/BowVector.o"
-	@echo "... DBoW2/BowVector.i"
-	@echo "... DBoW2/BowVector.s"
-	@echo "... DBoW2/FORB.o"
-	@echo "... DBoW2/FORB.i"
-	@echo "... DBoW2/FORB.s"
-	@echo "... DBoW2/FeatureVector.o"
-	@echo "... DBoW2/FeatureVector.i"
-	@echo "... DBoW2/FeatureVector.s"
-	@echo "... DBoW2/ScoringObject.o"
-	@echo "... DBoW2/ScoringObject.i"
-	@echo "... DBoW2/ScoringObject.s"
-	@echo "... DUtils/Random.o"
-	@echo "... DUtils/Random.i"
-	@echo "... DUtils/Random.s"
-	@echo "... DUtils/Timestamp.o"
-	@echo "... DUtils/Timestamp.i"
-	@echo "... DUtils/Timestamp.s"
+	@echo "... rebuild_cache"
+	@echo "... list_install_components"
+	@echo "... demo/demo.o"
+	@echo "... demo/demo.i"
+	@echo "... demo/demo.s"
+	@echo "... src/BowVector.o"
+	@echo "... src/BowVector.i"
+	@echo "... src/BowVector.s"
+	@echo "... src/FBrief.o"
+	@echo "... src/FBrief.i"
+	@echo "... src/FBrief.s"
+	@echo "... src/FORB.o"
+	@echo "... src/FORB.i"
+	@echo "... src/FORB.s"
+	@echo "... src/FeatureVector.o"
+	@echo "... src/FeatureVector.i"
+	@echo "... src/FeatureVector.s"
+	@echo "... src/QueryResults.o"
+	@echo "... src/QueryResults.i"
+	@echo "... src/QueryResults.s"
+	@echo "... src/ScoringObject.o"
+	@echo "... src/ScoringObject.i"
+	@echo "... src/ScoringObject.s"
 .PHONY : help
 
 

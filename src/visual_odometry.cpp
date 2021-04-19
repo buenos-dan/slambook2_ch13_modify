@@ -21,11 +21,8 @@ bool VisualOdometry::Init() {
     CHECK_EQ(dataset_->Init(), true);
 
     LOG(INFO) << "load vocab";
-    DBoW3::Vocabulary vocab("./Thirdparty/vocab_larger.yml.gz");
-    if(vocab.empty()){
-        LOG(INFO) << "vocab is empty. exit...";
-        return false;
-    };
+    //  voc = new BriefVocabulary(voc_path);
+    BriefVocabulary* vocab = new BriefVocabulary("./Thirdparty/vocab_larger.yml.gz");
     LOG(INFO) << "done !!!";
 
 
@@ -45,7 +42,7 @@ bool VisualOdometry::Init() {
     backend_->SetCameras(dataset_->GetCamera(0), dataset_->GetCamera(1));
 
     loopclosing_->SetMap(map_);
-    loopclosing_->SetVocab(&vocab);
+    loopclosing_->SetVocab(vocab);
 
     viewer_->SetMap(map_);
 
