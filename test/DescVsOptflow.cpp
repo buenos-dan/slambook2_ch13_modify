@@ -51,7 +51,7 @@ void stereoMatchOptflow(Mat imgLeft, Mat imgRight) {
 
     Mat imgOut;
     drawMatches(imgLeft, kpsLeft, imgRight, kpsRight, matches, imgOut);
-    imshow("orb", imgOut);
+    imshow("optflow", imgOut);
     cvWaitKey(0);
 }
 
@@ -76,10 +76,12 @@ void stereoMatchOrb(Mat imgLeft, Mat imgRgiht) {
 
 
 int main(int argc, char **argv) {
+    string basePath = "/home/buenos/buenos/data_odometry_gray/dataset/sequences/";
+    // string basePath = "/home/buenos/slamDataset/kitti/";
     Mat imgLeft, imgRight;
     if(argc != 2) {
-        imgLeft = imread("/home/yuhaorong/slamDataset/kitti/00/image_0/000000.png", CV_LOAD_IMAGE_GRAYSCALE);
-        imgRight = imread("/home/yuhaorong/slamDataset/kitti/00/image_1/000000.png", CV_LOAD_IMAGE_GRAYSCALE);
+        imgLeft = imread(basePath + "00/image_0/000000.png", CV_LOAD_IMAGE_GRAYSCALE);
+        imgRight = imread(basePath + "00/image_1/000000.png", CV_LOAD_IMAGE_GRAYSCALE);
         printf("usage: OrbVsOptflow <img1> <img2>\n");
     } else {
         imgLeft = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);

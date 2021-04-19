@@ -16,7 +16,7 @@
 namespace myslam {
 
 Frontend::Frontend() {
-    orbExtractor_ = new OrbExtractor(8, 1.2, 20, 500);
+    orbExtractor_ = new OrbExtractor(1, 1, 1, 1000, 1.2, 8, 20, 7);
     orbMatcher_ = new OrbMatcher();
 
     num_features_init_ = Config::Get<int>("num_features_init");
