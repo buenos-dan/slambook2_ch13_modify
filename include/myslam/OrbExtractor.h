@@ -1,25 +1,101 @@
 #pragma once
 
+#include <iostream>
 #include <vector>
-#include <opencv2/opencv.hpp>
-#include <opencv2/features2d/features2d.hpp>
+#include <list>
+#include <opencv/cv.h>
 
-using namespace std;
-using namespace cv;
+#include <chrono>
 
-namespace myslam {
+namespace myslam
+{
 
-class OrbExtractor {
+class ExtractorNode
+{
 public:
+    ExtractorNode():bNoMore(false){}
 
-    OrbExtractor(int nLevels, float factor, int thFast, int nFeatures);
+    void DivideNode(ExtractorNode &n1, ExtractorNode &n2, ExtractorNode &n3, ExtractorNode &n4);
 
-    void operator () (const Mat &img, vector<KeyPoint> &kps, Mat &descs);
-
-private:
-
-    Ptr<ORB> orbExtractor_;
-
+    std::vector<cv::KeyPoint> vKeys;
+    cv::Point2i UL, UR, BL, BR;
+    std::list<ExtractorNode>::iterator lit;
+    bool bNoMore;
 };
 
-}
+class OrbExtractor
+{
+public:
+    
+    enum {HARRIS_SCORE=0, FAST_SCORE=1 };
+
+    OrbExtractor(int detectorType, int descriptorType, int patternType,
+                 int nfeatures, float scaleFactor, int nlevels,
+                 int iniThFAST, int minThFAST);
+
+    ~OrbExtractor(){}
+
+    // Compute the ORB features and descriptors on an image.
+    // ORB are dispersed on the image using an octree.
+    // Mask is ignored in the current implementation.
+    void operator()(cv::InputArray image, std::vector<cv::KeyPoint>& keypoints, cv::OutputArray descriptors);
+
+    int inline GetLevels(){
+        return nlevels;}
+
+    float inline GetScaleFactor(){
+        return scaleFactor;}
+
+    std::vector<float> inline GetScaleFactors(){
+        return mvScaleFactor;
+    }
+
+    std::vector<float> inline GetInverseScaleFactors(){
+        return mvInvScaleFactor;
+    }
+
+    std::vector<float> inline GetScaleSigmaSquares(){
+        return mvLevelSigma2;
+    }
+
+    std::vector<float> inline GetInverseScaleSigmaSquares(){
+        return mvInvLevelSigma2;
+    }
+
+    void printProfileInfo();
+
+    std::vector<cv::Mat> mvImagePyramid;
+    std::vector<double> timeTotal;
+
+protected:
+
+    void ComputePyramid(cv::Mat image);
+    void ComputeKeyPointsOctTree(std::vector<std::vector<cv::KeyPoint> >& allKeypoints);    
+    std::vector<cv::KeyPoint> DistributeOctTree(const std::vector<cv::KeyPoint>& vToDistributeKeys, const int &minX,
+                                           const int &maxX, const int &minY, const int &maxY, const int &nFeatures, const int &level);
+    void ComputeKeyPointsOld(std::vector<std::vector<cv::KeyPoint> >& allKeypoints);
+    void ComputeKeyPointsNaive(std::vector<std::vector<cv::KeyPoint> >& allKeypoints);
+    void ComputeKeyPointsLessNaive(std::vector<std::vector<cv::KeyPoint> >& allKeypoints);
+
+    std::vector<cv::Point> pattern;
+
+    int detectorType;
+    int patternType;
+    int descriptorType;
+    int nfeatures;
+    double scaleFactor;
+    int nlevels;
+    int iniThFAST;
+    int minThFAST;
+
+    std::vector<int> mnFeaturesPerLevel;
+
+    std::vector<int> umax;
+
+    std::vector<float> mvScaleFactor;
+    std::vector<float> mvInvScaleFactor;    
+    std::vector<float> mvLevelSigma2;
+    std::vector<float> mvInvLevelSigma2;
+};
+
+} //namespace ORB_SLAM

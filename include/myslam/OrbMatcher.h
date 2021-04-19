@@ -10,7 +10,7 @@ namespace myslam {
 
 class OrbMatcher {
 public:
-void match(const Mat &descs1, const Mat &descs2, vector<DMatch> &matches);
+void match(const Mat &descs1, const Mat &descs2, vector<DMatch> &matches, float thRatio = 0.7);
 
 private:
 int DescriptorDistance(const Mat &a, const Mat &b);

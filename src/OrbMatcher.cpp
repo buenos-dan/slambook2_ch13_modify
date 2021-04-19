@@ -2,7 +2,7 @@
 
 namespace myslam {
 
-void OrbMatcher::match(const Mat &descs1, const Mat &descs2, vector<DMatch> &matches) {
+void OrbMatcher::match(const Mat &descs1, const Mat &descs2, vector<DMatch> &matches, float thRatio) {
     for(int i = 0; i < descs1.rows; i++) {
         cv::DMatch match;
         int minDist = 255, minDist2 = 255;
@@ -22,7 +22,7 @@ void OrbMatcher::match(const Mat &descs1, const Mat &descs2, vector<DMatch> &mat
         match.trainIdx = matchIdx;
         match.distance = minDist;
 
-        if(minDist < minDist2 * 0.7)
+        if(minDist < minDist2 * thRatio)
             matches.push_back(match);
     }
 }
