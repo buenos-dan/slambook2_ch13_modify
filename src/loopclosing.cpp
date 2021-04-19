@@ -34,7 +34,7 @@ namespace myslam {
             return false;
         }
 
-        cv::Mat descriptor_ = currentKF_ -> GetDescriptor();
+        cv::Mat descriptor_ = currentKF_ -> GetDescriptors();
         Map::KeyframesType keyFrames_ = map_ -> GetAllKeyFrames();  // unordered_map<long, Frame>
         for (auto it = keyFrames_.begin(); it != keyFrames_.end(); ++it) {
             // DBoW3::BowVector v1, v2;
