@@ -56,8 +56,8 @@ struct Frame {
     void SetKeyFrame();
 
     cv::Mat GetDescriptor();
-    void SetDescriptor(vector<BRIEF::bitset> &descriptor);
-    vector<BRIEF::bitset> briefDescriptors;
+    // void SetDescriptor(std::vector<BRIEF::bitset> &descriptor);
+    // std::vector<BRIEF::bitset> briefDescriptors;
 
     /// 工厂构建模式，分配id 
     static std::shared_ptr<Frame> CreateFrame();

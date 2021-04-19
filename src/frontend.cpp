@@ -83,7 +83,7 @@ bool Frontend::InsertKeyframe() {
     // cv::imshow("hello", current_frame_->left_img_);
     // cv::waitKey(0);
     orbDetector_->detectAndCompute(current_frame_->left_img_, cv::Mat(), kps, desc);
-    current_frame_->SetDescriptor(desc);
+    // current_frame_->SetDescriptor(desc);
 
     // current frame is a new keyframe
     current_frame_->SetKeyFrame();
