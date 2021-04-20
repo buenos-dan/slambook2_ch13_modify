@@ -39,6 +39,7 @@ void MapPoint::RemoveObservation(std::shared_ptr<Feature> feat) {
             observations_.erase(iter);
             feat->map_point_.reset();
             observed_times_--;
+            // 更新本mappoint的desc,待添加
             break;
         }
     }

@@ -40,8 +40,6 @@ struct Frame : std::enable_shared_from_this<Frame> {
     std::vector<std::shared_ptr<Feature>> features_left_;
     // corresponding features in right image, set to nullptr if no corresponding
     std::vector<std::shared_ptr<Feature>> features_right_;
-    cv::Mat descs_left_;
-    cv::Mat descs_right;
 
    public:  // data members
     Frame() {}
@@ -59,10 +57,6 @@ struct Frame : std::enable_shared_from_this<Frame> {
         std::unique_lock<std::mutex> lck(pose_mutex_);
         pose_ = pose;
     }
-
-    // 提取左右图片的特征并进行匹配,将 匹配成功 特征依次放在features_left_与features_right_中
-    // 返回匹配对数
-    int ExtractAndMatch(OrbExtractor *orbExtractor, OrbMatcher *orbMatcher);
 
     cv::Mat GetDescriptors();
 

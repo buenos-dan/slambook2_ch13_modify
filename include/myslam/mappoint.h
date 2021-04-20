@@ -3,6 +3,7 @@
 #define MYSLAM_MAPPOINT_H
 
 #include "myslam/common_include.h"
+#include "myslam/feature.h"
 
 namespace myslam {
 
@@ -24,6 +25,7 @@ struct MapPoint {
     std::mutex data_mutex_;
     int observed_times_ = 0;  // being observed by feature matching algo.
     std::list<std::weak_ptr<Feature>> observations_;
+    cv::Mat desc;
 
     MapPoint() {}
 
@@ -42,6 +44,8 @@ struct MapPoint {
     void AddObservation(std::shared_ptr<Feature> feature) {
         std::unique_lock<std::mutex> lck(data_mutex_);
         observations_.push_back(feature);
+        if(observed_times_ == 0)
+            this->desc = (feature->desc).clone();
         observed_times_++;
     }
 

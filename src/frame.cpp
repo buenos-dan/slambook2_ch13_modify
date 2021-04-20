@@ -37,34 +37,13 @@ void Frame::SetKeyFrame() {
     keyframe_id_ = keyframe_factory_id++;
 }
 
-int Frame::ExtractAndMatch(OrbExtractor *orbExtractor, OrbMatcher *orbMatcher) {
-    vector<cv::KeyPoint> kps_left, kps_right;
-    cv::Mat descs_left_raw, descs_right_raw;
-
-    (*orbExtractor)(left_img_, kps_left, descs_left_raw);
-    (*orbExtractor)(right_img_, kps_right, descs_right_raw);
-
-    vector<cv::DMatch> matches;
-    orbMatcher->match(descs_left_raw, descs_right_raw, matches);
-    descs_left_.create(matches.size(), 32, CV_8UC1);
-    for(int i = 0; i < matches.size(); i++) {
-        Feature::Ptr feature_left(new Feature(shared_from_this(), kps_left[matches[i].trainIdx]));
-        Feature::Ptr feature_right(new Feature(shared_from_this(), kps_right[matches[i].queryIdx]));
-        feature_left->is_on_left_image_ = true;
-        feature_right->is_on_left_image_ = false;
-        features_left_.push_back(feature_left);
-        features_right_.push_back(feature_right);
-
-        descs_left_raw.row(matches[i].queryIdx).copyTo(descs_left_.row(i));
+cv::Mat Frame::GetDescriptors() {
+    Mat descs;
+    descs.create(features_left_.size(), 32, CV_8UC1);
+    for(int i = 0; i < features_left_.size(); i++) {
+        features_left_[i]->desc.copyTo(descs.row(i));
     }
 
-    return matches.size();
+    return descs;
 }
-
-cv::Mat Frame::GetDescriptors() {
-    return descs_left_;
-}
-
-
-
 }

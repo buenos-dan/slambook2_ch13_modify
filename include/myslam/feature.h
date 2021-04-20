@@ -31,11 +31,21 @@ struct Feature {
     bool is_outlier_ = false;       // 是否为异常点
     bool is_on_left_image_ = true;  // 标识是否提在左图，false为右图
 
+    cv::Mat desc;
+
    public:
     Feature() {}
 
+    Feature(std::shared_ptr<Frame> frame, const cv::KeyPoint &kp, const Mat &desc)
+        : frame_(frame), position_(kp) {
+            this->desc.create(1, 32, CV_8UC1);
+            desc.copyTo(this->desc);
+    }
+
     Feature(std::shared_ptr<Frame> frame, const cv::KeyPoint &kp)
-        : frame_(frame), position_(kp) {}
+        : frame_(frame), position_(kp) {
+    }
+    
 };
 }  // namespace myslam
 
